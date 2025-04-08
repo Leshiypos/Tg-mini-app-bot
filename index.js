@@ -1,9 +1,10 @@
 const TelegramBot = require("node-telegram-bot-api");
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const { inlineMenu, meinMenu } = require("./buttons.js");
-const token = "7568095795:AAHQ0Zf_yndBym8BgN-tY11DWVgJDWKa648";
+const token = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
@@ -46,7 +47,7 @@ bot.on("message", async (msg) => {
   bot.sendMessage(chatId, "Команда мне не понятна");
 });
 
-app.post("/web-data", async (req, res) => {
+app.post(process.env.END_POINT, async (req, res) => {
   const { queryId, products, totalPrice } = req.body;
   try {
     await bot.answerWebAppQuery(queryId, {
@@ -74,6 +75,6 @@ app.post("/web-data", async (req, res) => {
   }
 });
 
-const PORT = "5172";
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log("server started on PORT = " + PORT));
